@@ -3,7 +3,9 @@ use chrono::{DateTime, Utc};
 
 #[derive(PartialEq)]
 #[derive(Debug)]
+#[derive(Clone)]
 pub(crate) enum Value{
+    NULL(),
     I32(i32),
     F32(f32, usize),
     STRING(String),
@@ -12,6 +14,7 @@ pub(crate) enum Value{
 
 //Implementation for default Values of each datatype. Mainly used for comparisons between Enum variants
 impl Value{
+    fn null_default() -> Self {Value::NULL()}
     fn i32_default() -> Self {Value::I32(0)}
     fn f32_default() -> Self {Value::F32(0.0, 0)}
     fn string_default() -> Self {Value::STRING("".to_owned())}
@@ -22,6 +25,7 @@ impl Value{
 impl fmt::Display for Value {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
+            Value::NULL() => write!(f, ""),
             Value::I32(val) => write!(f, "{}", val.to_string()),
             Value::F32(val, precision) => write!(f, "{}", format!("{val:.prec$}", val=val, prec=precision)),
             Value::STRING(val) => write!(f, "{}", val),
